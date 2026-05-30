@@ -1,0 +1,23 @@
+{
+  "name": "@meappy/openclaw-whatsapp-bridge",
+  "version": "0.1.0",
+  "description": "OpenClaw plugin: HTTP-in → WhatsApp-out bridge using the host bot's paired Baileys session.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meappy/openclaw-whatsapp-bridge"
+  },
+  "keywords": ["openclaw", "openclaw-plugin", "whatsapp", "baileys", "bridge"],
+  "files": [
+    "index.ts",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "openclaw": "*"
+  },
+  "openclaw": {
+    "extensions": ["./index.ts"]
+  }
+}

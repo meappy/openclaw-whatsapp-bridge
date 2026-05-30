@@ -1,0 +1,36 @@
+{
+  "id": "whatsapp-bridge",
+  "name": "WhatsApp Bridge",
+  "description": "HTTP-in → WhatsApp-out bridge. Exposes POST /api/whatsapp-bridge/send so external services can dispatch WhatsApp messages through this bot's already-paired Baileys session.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "token": {
+        "type": "string",
+        "description": "Bearer token required on POST /api/whatsapp-bridge/send. Set this to a random secret and share it only with trusted callers. If unset, the route is disabled."
+      },
+      "path": {
+        "type": "string",
+        "default": "/api/whatsapp-bridge/send",
+        "description": "HTTP path the route is mounted at."
+      },
+      "accountId": {
+        "type": "string",
+        "description": "Default WhatsApp accountId to send through. Optional — omit to use the bot's default account."
+      },
+      "maxBodyBytes": {
+        "type": "integer",
+        "default": 65536,
+        "minimum": 1024,
+        "maximum": 1048576,
+        "description": "Maximum request body size in bytes."
+      },
+      "verbose": {
+        "type": "boolean",
+        "default": false,
+        "description": "Pass verbose=true to sendMessageWhatsApp (more logging)."
+      }
+    }
+  }
+}
