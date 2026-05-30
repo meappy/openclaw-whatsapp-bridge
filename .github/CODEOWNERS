@@ -1,0 +1,12 @@
+# Default — Gerald reviews everything not matched below.
+*                              @meappy
+
+# CI/CD pipelines.
+/.github/workflows/            @meappy
+
+# Repo governance.
+/README.md                     @meappy
+/CONTRIBUTING.md               @meappy
+/SECURITY.md                   @meappy
+/LICENSE                       @meappy
+/.github/CODEOWNERS            @meappy

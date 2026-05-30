@@ -1,0 +1,27 @@
+# Dependabot — automated dependency PRs.
+#
+# Plugin has no runtime npm deps (only a peerDep on openclaw), so this watches
+# GitHub Actions in workflows for bumps.
+
+version: 2
+updates:
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: Australia/Adelaide
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: chore(ci)
+      include: scope
+    groups:
+      first-party-actions:
+        patterns:
+          - "actions/*"
+          - "github/*"
