@@ -1,6 +1,9 @@
 .gitignore
 .npmignore
 node_modules
+index.ts
+tsconfig.json
+*.tsbuildinfo
 .env
 .env.*
 *.log

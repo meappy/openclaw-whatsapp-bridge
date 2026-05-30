@@ -15,18 +15,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "20"
+          bun-version: latest
 
-      # The plugin has no build step — it's a single index.ts loaded by the
-      # host bot at runtime. We just validate it parses cleanly.
-      - name: TypeScript syntax check
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Verify dist/index.js exists and is valid JS
         run: |
-          npm install --no-save typescript@5
-          npx --no-install tsc --noEmit --target esnext --module esnext --moduleResolution bundler --allowImportingTsExtensions --noResolve index.ts
+          test -f dist/index.js || { echo "::error::dist/index.js missing after build"; exit 1; }
+          node --check dist/index.js
 
-      # Manifest sanity — required fields present, JSON valid.
       - name: Plugin manifest sanity
         run: |
           node -e '
@@ -38,21 +41,22 @@ jobs:
             console.log("manifest ok:", m.id, m.name);
           '
 
-      # Package.json sanity — name scoped, version present, openclaw block.
       - name: package.json sanity
         run: |
           node -e '
             const p = require("./package.json");
             if (!p.name.startsWith("@meappy/")) { console.error("name must be @meappy-scoped"); process.exit(1); }
             if (!p.openclaw || !p.openclaw.extensions) { console.error("missing .openclaw.extensions"); process.exit(1); }
+            const ext = p.openclaw.extensions[0];
+            if (!ext.endsWith(".js")) { console.error("extensions must point to compiled JS, not .ts"); process.exit(1); }
             console.log("package.json ok:", p.name, p.version);
           '
 
-      # Secrets sweep — fail PR if something credential-shaped slips in.
       - name: Secrets sweep
         run: |
           if grep -rEn 'AKIA|sk-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{25,}|mtk_[a-z0-9]+|AVNS_|gh[poseuh]_[A-Za-z0-9]{30,}|AC[a-f0-9]{30,}|\+6[0-9]{8,9}|\+61[0-9]{8,9}' \
-            --include='*.ts' --include='*.json' --include='*.md' .; then
+            --include='*.ts' --include='*.json' --include='*.md' \
+            --exclude-dir=node_modules --exclude-dir=dist .; then
             echo "::error::Possible secret or operational phone number found above"
             exit 1
           fi
