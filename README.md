@@ -1,5 +1,19 @@
 # @meappy/openclaw-whatsapp-bridge
 
+> ### ⚠️ Status: parked
+>
+> This plugin is **not currently functional** against OpenClaw v5.x.
+>
+> The plugin loads its HTTP route correctly via `api.registerHttpRoute`, but the WhatsApp send function it relies on (`sendMessageWhatsApp`) is no longer exported from the public Plugin SDK — OpenClaw v5.x extracted WhatsApp into the separate `@openclaw/whatsapp` plugin, which doesn't expose its outbound API to other plugins.
+>
+> The `OpenClawPluginApi` surface in v5.x has no public "send to channel" method either. So a plugin can listen for HTTP requests, but it can't dispatch them through another channel without that channel exposing internal hooks.
+>
+> **If you need WhatsApp-from-HTTP today**, run your own Baileys session in your service. Pair it as a companion device on whichever number you want to send from.
+>
+> This package will be reactivated when OpenClaw exposes a public outbound-dispatch API. Track [openclaw#TBD](https://github.com/openclaw/openclaw/issues) (no issue filed yet — open one and link it here if you'd like this revived).
+
+---
+
 An [OpenClaw](https://github.com/openclaw/openclaw) plugin that exposes a single HTTP route on the host bot so external services can dispatch WhatsApp messages through the bot's already-paired Baileys session.
 
 The recipient sees a regular WhatsApp DM from the bot's number — no Twilio, no Meta Business Cloud, no per-recipient opt-in.
